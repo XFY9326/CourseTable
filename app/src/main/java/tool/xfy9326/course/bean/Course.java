@@ -105,6 +105,10 @@ public class Course implements Serializable {
         this.courseStyle = courseStyle;
     }
 
+    public void refreshCourseStyle() {
+        this.courseStyle = CourseStyleUtils.getNewCourseStyle(courseId);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

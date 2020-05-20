@@ -16,9 +16,12 @@ import tool.xfy9326.course.bean.SchedulerTable;
 import tool.xfy9326.course.bean.ShowWeekNum;
 import tool.xfy9326.course.bean.WeekNum;
 import tool.xfy9326.course.db.CourseDBProvider;
+import tool.xfy9326.course.net.NetCourseInfo;
+import tool.xfy9326.course.net.SchoolClient;
 import tool.xfy9326.course.tool.AppPref;
 import tool.xfy9326.course.tool.ThreadScheduler;
 import tool.xfy9326.course.tool.trigger.EventTrigger;
+import tool.xfy9326.course.tool.trigger.NotifyTrigger;
 import tool.xfy9326.course.ui.base.SimpleViewModel;
 import tool.xfy9326.course.utils.TimeUtils;
 
@@ -27,8 +30,9 @@ public class CourseTableViewModel extends SimpleViewModel {
     public final MutableLiveData<WeekNum> nowWeekNum = new MutableLiveData<>();
     public final MutableLiveData<ShowWeekNum> nowShowWeekNum = new MutableLiveData<>();
     public final EventTrigger<Course> showCourseDetail = new EventTrigger<>();
+    public final NotifyTrigger notifyTrigger = new NotifyTrigger();
     public final MediatorLiveData<CourseBuildBundle> coursesLiveData = new MediatorLiveData<>();
-    public final MutableLiveData<HashMap<SchedulerTable, Boolean>> schedulerTables = new MutableLiveData<>();
+    private final MutableLiveData<HashMap<SchedulerTable, Boolean>> schedulerTables = new MutableLiveData<>();
     private final Object nowWeekNumInit = new Object();
 
     private LiveData<List<Course>> courseSource;
@@ -138,6 +142,34 @@ public class CourseTableViewModel extends SimpleViewModel {
             Course course = CourseDBProvider.getCourseDao().readCourse(courseId);
             if (course != null) {
                 showCourseDetail.postValue(course);
+            }
+        });
+    }
+
+    public void loadCourses(String id, String pw) {
+        getThreadScheduler().post(ThreadScheduler.ExecutorType.DEFAULT, () -> {
+            SchedulerTable schedulerTable = currentSchedulerTable.getValue();
+            if (schedulerTable != null) {
+                SchoolClient client = new SchoolClient();
+                try {
+                    NetCourseInfo info = client.getCourseData(id, pw, true);
+                    if (info == null) {
+                        notifyTrigger.postNotification();
+                    } else {
+                        schedulerTable.setMaxCoursePerDay(info.getMaxCoursePerDay());
+                        schedulerTable.setMaxWeekNum(info.getMaxWeekNum());
+                        schedulerTable.setTermStartDate(info.getTermStartDate());
+                        CourseDBProvider.getCourseDao().putSchedulerTables(schedulerTable);
+
+                        CourseDBProvider.getCourseDao().deleteCourseByTableId(schedulerTable.getTableId());
+                        CourseDBProvider.getCourseDao().saveCourses(info.getCourses().toArray(new Course[0]));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    notifyTrigger.postNotification();
+                }
+            } else {
+                notifyTrigger.postNotification();
             }
         });
     }

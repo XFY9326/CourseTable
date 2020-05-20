@@ -2,10 +2,12 @@ package tool.xfy9326.course.utils;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.DefaultLifecycleObserver;
@@ -21,8 +23,36 @@ import tool.xfy9326.course.BuildConfig;
 import tool.xfy9326.course.R;
 import tool.xfy9326.course.databinding.DialogAboutBinding;
 import tool.xfy9326.course.databinding.DialogCourseControlPanelBinding;
+import tool.xfy9326.course.databinding.DialogLoginBinding;
 
 public class DialogUtils {
+
+    public static Dialog getLoginDialog(@NonNull Context context, @NonNull Lifecycle lifecycle, @NonNull OnGetLoginInfoListener loginInfoListener) {
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
+        DialogLoginBinding binding = DialogLoginBinding.inflate(LayoutInflater.from(context));
+        builder.setView(binding.getRoot());
+        builder.setTitle(R.string.load_courses);
+        builder.setPositiveButton(R.string.load_courses, (dialog, which) -> {
+            Editable idEditable = binding.editTextUserId.getText();
+            Editable pwEditable = binding.editTextUserPassword.getText();
+            if (idEditable == null || pwEditable == null) {
+                Toast.makeText(context, R.string.login_error, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            String id = idEditable.toString();
+            String pw = pwEditable.toString();
+            if (id.isEmpty() || pw.isEmpty()) {
+                Toast.makeText(context, R.string.login_error, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            loginInfoListener.onGetLoginInfo(id, pw);
+        });
+        builder.setCancelable(false);
+        builder.setNegativeButton(android.R.string.cancel, null);
+        Dialog dialog = builder.create();
+        applyAutoClose(lifecycle, dialog);
+        return dialog;
+    }
 
     public static Dialog getAboutDialog(@NonNull Context context, @NonNull Lifecycle lifecycle) {
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
@@ -81,5 +111,9 @@ public class DialogUtils {
 
     public interface OnWeekNumChangedListener {
         void onWeekNumChanged(int weekNum);
+    }
+
+    public interface OnGetLoginInfoListener {
+        void onGetLoginInfo(String id, String pw);
     }
 }

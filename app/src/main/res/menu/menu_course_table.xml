@@ -9,6 +9,12 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/menu_loadCourses"
+        android:icon="@drawable/ic_load"
+        android:title="@string/load_courses"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/menu_about"
         android:icon="@drawable/ic_about"
         android:title="@string/about"

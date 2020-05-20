@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,7 +22,7 @@ import tool.xfy9326.course.utils.DialogUtils;
 import tool.xfy9326.course.utils.I18NUtils;
 import tool.xfy9326.course.utils.TimeUtils;
 
-public class CourseTableActivity extends ViewModelActivity<CourseTableViewModel> implements DialogUtils.OnWeekNumChangedListener {
+public class CourseTableActivity extends ViewModelActivity<CourseTableViewModel> implements DialogUtils.OnWeekNumChangedListener, DialogUtils.OnGetLoginInfoListener {
     private LayoutCourseTableBinding viewBinding;
     private CourseTableViewPagerAdapter tableViewPagerAdapter;
     private CourseTableViewPagerCallback viewPagerCallback;
@@ -67,6 +68,7 @@ public class CourseTableActivity extends ViewModelActivity<CourseTableViewModel>
                 }
             }
         });
+        vm.notifyTrigger.observe(this, () -> Toast.makeText(this, R.string.data_get_error, Toast.LENGTH_SHORT).show());
         vm.showCourseDetail.observe(this, course -> CourseDetailDialog.showDialog(getSupportFragmentManager(), course));
     }
 
@@ -105,6 +107,9 @@ public class CourseTableActivity extends ViewModelActivity<CourseTableViewModel>
             case R.id.menu_about:
                 DialogUtils.getAboutDialog(this, getLifecycle()).show();
                 break;
+            case R.id.menu_loadCourses:
+                DialogUtils.getLoginDialog(this, getLifecycle(), this).show();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -112,6 +117,12 @@ public class CourseTableActivity extends ViewModelActivity<CourseTableViewModel>
     @Override
     public void onWeekNumChanged(int weekNum) {
         viewBinding.viewPagerCourseTable.setCurrentItem(weekNum - 1);
+    }
+
+    @Override
+    public void onGetLoginInfo(String id, String pw) {
+        requireViewModel().loadCourses(id, pw);
+        Toast.makeText(this, R.string.loading, Toast.LENGTH_SHORT).show();
     }
 
     @Override
