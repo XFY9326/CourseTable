@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="weekday_show_text">
+        <item>@string/sunday</item>
+        <item>@string/monday</item>
+        <item>@string/tuesday</item>
+        <item>@string/wednesday</item>
+        <item>@string/thursday</item>
+        <item>@string/friday</item>
+        <item>@string/saturday</item>
+    </string-array>
+
+    <integer-array name="material_colors">
+        <item>@color/material_red_300</item>
+        <item>@color/material_pink_300</item>
+        <item>@color/material_purple_300</item>
+        <item>@color/material_deep_purple_300</item>
+        <item>@color/material_indigo_300</item>
+        <item>@color/material_blue_300</item>
+        <item>@color/material_light_blue_300</item>
+        <item>@color/material_cyan_300</item>
+        <item>@color/material_teal_300</item>
+        <item>@color/material_green_300</item>
+        <item>@color/material_light_green_400</item>
+        <item>@color/material_lime_400</item>
+        <item>@color/material_amber_400</item>
+        <item>@color/material_orange_300</item>
+        <item>@color/material_deep_orange_300</item>
+    </integer-array>
+</resources>

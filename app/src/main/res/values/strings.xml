@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">课程表</string>
+    <string name="app_description">开源课程表组件</string>
+    <string name="default_str">默认</string>
+    <string name="monday">一</string>
+    <string name="tuesday">二</string>
+    <string name="wednesday">三</string>
+    <string name="thursday">四</string>
+    <string name="friday">五</string>
+    <string name="saturday">六</string>
+    <string name="sunday">日</string>
+    <string name="week_num_text">第%1$d周</string>
+    <string name="week_num_title">周数</string>
+    <string name="current_week">当前周：第%1$d周</string>
+    <string name="current_week_in_vacation">当前放假中</string>
+    <string name="week_day_text">周%1$s</string>
+    <string name="not_current_week">非本周</string>
+    <string name="month_day">%1$d月%2$d日</string>
+    <string name="month">%1$d月</string>
+    <string name="in_vacation">放假中</string>
+    <string name="not_this_week">[非本周]\n</string>
+    <string name="course_text_with_location">%1$s\n\n@%2$s</string>
+    <string name="about">关于</string>
+    <string name="table_control">课表控制</string>
+    <string name="version_title">版本</string>
+    <string name="version">v%1$s(%2$d)</string>
+    <string name="author">作者</string>
+    <string name="author_name" translatable="false">XFY9326</string>
+</resources>
