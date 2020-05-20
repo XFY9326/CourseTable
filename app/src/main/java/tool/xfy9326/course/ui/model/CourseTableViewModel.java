@@ -18,16 +18,17 @@ import tool.xfy9326.course.bean.WeekNum;
 import tool.xfy9326.course.db.CourseDBProvider;
 import tool.xfy9326.course.tool.AppPref;
 import tool.xfy9326.course.tool.ThreadScheduler;
+import tool.xfy9326.course.tool.trigger.EventTrigger;
 import tool.xfy9326.course.ui.base.SimpleViewModel;
 import tool.xfy9326.course.utils.TimeUtils;
 
 public class CourseTableViewModel extends SimpleViewModel {
     public final MutableLiveData<SchedulerTable> currentSchedulerTable = new MutableLiveData<>();
-    public final MutableLiveData<HashMap<SchedulerTable, Boolean>> schedulerTables = new MutableLiveData<>();
     public final MutableLiveData<WeekNum> nowWeekNum = new MutableLiveData<>();
     public final MutableLiveData<ShowWeekNum> nowShowWeekNum = new MutableLiveData<>();
+    public final EventTrigger<Course> showCourseDetail = new EventTrigger<>();
     public final MediatorLiveData<CourseBuildBundle> coursesLiveData = new MediatorLiveData<>();
-
+    public final MutableLiveData<HashMap<SchedulerTable, Boolean>> schedulerTables = new MutableLiveData<>();
     private final Object nowWeekNumInit = new Object();
 
     private LiveData<List<Course>> courseSource;
@@ -130,5 +131,14 @@ public class CourseTableViewModel extends SimpleViewModel {
     private void bindCourseLiveData(@NonNull final SchedulerTable schedulerTable) {
         courseSource = CourseDBProvider.getCourseDao().readCoursesAsync(schedulerTable.getTableId());
         coursesLiveData.addSource(courseSource, courses -> coursesLiveData.setValue(new CourseBuildBundle(courses, schedulerTable)));
+    }
+
+    public void showCourseDetailDialog(long courseId) {
+        getThreadScheduler().post(ThreadScheduler.ExecutorType.DEFAULT, () -> {
+            Course course = CourseDBProvider.getCourseDao().readCourse(courseId);
+            if (course != null) {
+                showCourseDetail.postValue(course);
+            }
+        });
     }
 }

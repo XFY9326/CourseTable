@@ -15,6 +15,7 @@ import tool.xfy9326.course.bean.WeekNum;
 import tool.xfy9326.course.databinding.LayoutCourseTableBinding;
 import tool.xfy9326.course.ui.adapter.CourseTableViewPagerAdapter;
 import tool.xfy9326.course.ui.base.ViewModelActivity;
+import tool.xfy9326.course.ui.dialog.CourseDetailDialog;
 import tool.xfy9326.course.ui.model.CourseTableViewModel;
 import tool.xfy9326.course.utils.DialogUtils;
 import tool.xfy9326.course.utils.I18NUtils;
@@ -66,6 +67,7 @@ public class CourseTableActivity extends ViewModelActivity<CourseTableViewModel>
                 }
             }
         });
+        vm.showCourseDetail.observe(this, course -> CourseDetailDialog.showDialog(getSupportFragmentManager(), course));
     }
 
     @Override
@@ -93,13 +95,16 @@ public class CourseTableActivity extends ViewModelActivity<CourseTableViewModel>
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.menu_tableControl) {
-            WeekNum weekNum = requireViewModel().nowWeekNum.getValue();
-            if (weekNum != null && tableViewPagerAdapter != null) {
-                DialogUtils.getCourseControlBottomDialog(this, getLifecycle(), weekNum.getWeekNum(), viewBinding.viewPagerCourseTable.getCurrentItem() + 1, tableViewPagerAdapter.getCurrentSchedulerTable().getMaxWeekNum(), this).show();
-            }
-        } else if (item.getItemId() == R.id.menu_about) {
-            DialogUtils.getAboutDialog(this, getLifecycle()).show();
+        switch (item.getItemId()) {
+            case R.id.menu_tableControl:
+                WeekNum weekNum = requireViewModel().nowWeekNum.getValue();
+                if (weekNum != null && tableViewPagerAdapter != null) {
+                    DialogUtils.getCourseControlBottomDialog(this, getLifecycle(), weekNum.getWeekNum(), viewBinding.viewPagerCourseTable.getCurrentItem() + 1, tableViewPagerAdapter.getCurrentSchedulerTable().getMaxWeekNum(), this).show();
+                }
+                break;
+            case R.id.menu_about:
+                DialogUtils.getAboutDialog(this, getLifecycle()).show();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

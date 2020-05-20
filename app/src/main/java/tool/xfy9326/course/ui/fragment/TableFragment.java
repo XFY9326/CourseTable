@@ -19,10 +19,11 @@ import tool.xfy9326.course.tool.ThreadScheduler;
 import tool.xfy9326.course.ui.model.CourseTableViewModel;
 import tool.xfy9326.course.ui.view.CourseTableHeaderView;
 import tool.xfy9326.course.ui.view.CourseTableView;
+import tool.xfy9326.course.ui.view.OnCourseCellClickListener;
 import tool.xfy9326.course.utils.CourseUtils;
 import tool.xfy9326.course.utils.TimeUtils;
 
-public class TableFragment extends Fragment {
+public class TableFragment extends Fragment implements OnCourseCellClickListener {
     public static final String EXTRA_WEEK_NUM = "EXTRA_WEEK_NUM";
 
     private final ThreadScheduler threadScheduler = new ThreadScheduler(getLifecycle());
@@ -82,6 +83,7 @@ public class TableFragment extends Fragment {
             threadScheduler.post(ThreadScheduler.ExecutorType.MAIN, () -> tableView.setCourseTable(courseTable, tableStyle));
         } else {
             CourseTableView courseTableView = new CourseTableView(requireContext(), courseTable, tableStyle);
+            courseTableView.setCellClickListener(this);
             threadScheduler.post(ThreadScheduler.ExecutorType.MAIN, () -> replaceAllView(layoutTableBinding.layoutEmptyCourseTable, courseTableView));
         }
     }
@@ -99,5 +101,10 @@ public class TableFragment extends Fragment {
             container.removeAllViews();
         }
         container.addView(view);
+    }
+
+    @Override
+    public void onCourseCellClick(long courseId) {
+        courseTableViewModel.showCourseDetailDialog(courseId);
     }
 }

@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">课程表</string>
-    <string name="app_description">开源课程表组件</string>
+    <string name="app_description">NAU课程表组件</string>
     <string name="default_str">默认</string>
     <string name="monday">一</string>
     <string name="tuesday">二</string>
@@ -26,4 +26,10 @@
     <string name="version">v%1$s(%2$d)</string>
     <string name="author">作者</string>
     <string name="author_name" translatable="false">XFY9326</string>
+    <string name="course_location">地点：%1$s</string>
+    <string name="course_teacher">教师：%1$s</string>
+    <string name="course_time">时间：第%1$s周 周%2$s 第%3$s节</string>
+    <string name="course_odd_week_time">时间：第%1$s周 单周 周%2$s 第%3$s节</string>
+    <string name="course_even_week_time">时间：第%1$s周 双周 周%2$s 第%3$s节</string>
+    <string name="course_class">班级：%1$s</string>
 </resources>

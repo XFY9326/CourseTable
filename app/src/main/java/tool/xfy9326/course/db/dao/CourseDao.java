@@ -1,6 +1,7 @@
 package tool.xfy9326.course.db.dao;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
@@ -54,9 +55,26 @@ public abstract class CourseDao {
         });
     }
 
+    @Nullable
+    public Course readCourse(long courseId) {
+        CourseBundle[] courseBundle = getCourseByCourseId(courseId);
+        if (courseBundle.length == 0) {
+            return null;
+        } else {
+            Course course = courseBundle[0].getCourse();
+            course.setCourseTimeList(courseBundle[0].getCourseTimeList());
+            course.setCourseStyle(courseBundle[0].getCourseStyle());
+            return course;
+        }
+    }
+
     @Transaction
     @Query("SELECT * FROM Course WHERE tableId=:tableId")
     abstract LiveData<List<CourseBundle>> getCoursesAsyncByTableId(long tableId);
+
+    @Transaction
+    @Query("SELECT * FROM Course WHERE courseId=:courseId")
+    abstract CourseBundle[] getCourseByCourseId(long courseId);
 
     @WorkerThread
     @Insert(onConflict = OnConflictStrategy.REPLACE)

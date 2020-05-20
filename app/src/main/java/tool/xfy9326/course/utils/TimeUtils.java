@@ -2,16 +2,54 @@ package tool.xfy9326.course.utils;
 
 import androidx.annotation.NonNull;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import tool.xfy9326.course.Const;
+import tool.xfy9326.course.bean.TimePeriod;
 import tool.xfy9326.course.bean.WeekDay;
 import tool.xfy9326.course.bean.WeekNum;
 import tool.xfy9326.course.tool.CalendarWeekDay;
 
 public class TimeUtils {
+    private static final String LIST_SPLIT = ",";
+
+    @NonNull
+    public static List<TimePeriod> fromTimePeriodListStr(@NonNull String value) {
+        if (value.isEmpty()) {
+            return Collections.emptyList();
+        } else if (value.contains(LIST_SPLIT)) {
+            String[] values = value.split(LIST_SPLIT);
+            ArrayList<TimePeriod> result = new ArrayList<>(values.length);
+            for (String s : values) {
+                result.add(new TimePeriod(s.trim()));
+            }
+            return result;
+        } else {
+            ArrayList<TimePeriod> result = new ArrayList<>(1);
+            result.add(new TimePeriod(value));
+            return result;
+        }
+    }
+
+    @NonNull
+    public static String timePeriodListToStr(@NonNull List<TimePeriod> timePeriods) {
+        if (timePeriods.isEmpty()) {
+            return "";
+        } else {
+            StringBuilder builder = new StringBuilder(timePeriods.size() * 3);
+            for (TimePeriod timePeriod : timePeriods) {
+                builder.append(timePeriod.toString()).append(LIST_SPLIT);
+            }
+            builder.deleteCharAt(builder.length() - 1);
+            return builder.toString();
+        }
+    }
+
     static int getWeekDayNum(@NonNull Date date) {
         Calendar calendar = getChinaCalendar();
         calendar.setTime(date);
