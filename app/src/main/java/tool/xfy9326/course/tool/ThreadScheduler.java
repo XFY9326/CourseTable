@@ -32,7 +32,7 @@ public class ThreadScheduler {
                 observer = new SchedulerLifeCycleObserver() {
                     @Override
                     public void onThreadCancel() {
-                        mainHandler.removeCallbacks(new SimpleRunnable(runnable));
+                        mainHandler.removeCallbacks(runnable);
                     }
                 };
                 break;
